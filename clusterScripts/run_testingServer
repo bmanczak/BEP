@@ -1,9 +1,0 @@
-#!/bin/bash
-source /mnt/server-home/TUE/20175985/miniconda3/etc/profile.d/conda.sh
-conda activate DL
-
-#python "/home/dc_group08/blazej/task.py" --job-dir 'jobs'
-python "/mnt/server-home/TUE/20175985/testingServer.py"
-
-conda deactivate
-exit 0
