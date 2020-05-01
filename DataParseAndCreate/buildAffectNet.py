@@ -84,11 +84,11 @@ def read_data(input_dir,
             if prepro == True:
                 try:
                     x = applyPreprocessing(img_array=x, detector=detector)
-                except:
+                except Exception as e:
+                    print("Failed MTCNN preprocessing", e, "with path", path)
                     failures_prepro += 1
 
             x = cv2.resize(x, (224, 224))
-
             # faster way of establishing whether row comes from validation set
             if label_and_rowNum[1] > training_csv.shape[0]:
                 X_test.append(x)
@@ -99,7 +99,8 @@ def read_data(input_dir,
 
             class_count[label_and_rowNum[0]] += 1  # keep track of label counts
             #print("Image has been processed with path", path)
-        except:
+        except Exception as e:
+            print("Failed to preprocess", path, "with exception", e)
             #print("Failed path", path)
             failures += 1
 

@@ -73,7 +73,7 @@ def read_data(img_path,
                     x = x[Y:Y+H, X:X+W]
                     #print("failed preprocessing MTCNN. Sucess with bounding box")
 
-                x = cv2.resize(x, (224, 224))
+            x = cv2.resize(x, (224, 224))
 
             if data.loc[path, 'Status'] == 'test':
                 X_test.append(x)
@@ -83,8 +83,8 @@ def read_data(img_path,
                 Y_train.append(data.loc[path, "Expression"])
 
             class_count[data.loc[path, "Expression"]] += 1  # keep track of label counts
-        except:
-            print("failed for path", path)
+        except Exception as e:
+            print("failed for path", path, "with error", e)
             failures += 1
 
     X_train = np.asarray(X_train).astype('float16') / 255.  # scaling the images by 255
