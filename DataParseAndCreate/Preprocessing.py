@@ -1,11 +1,8 @@
 import math
-from matplotlib import pyplot
 from PIL import Image
-from numpy import asarray
 from mtcnn.mtcnn import MTCNN  # face detector, install with pip install mtcnn
 # pre-processing, install with: pip install git+https://github.com/rcmalli/keras-vggface.git
 from keras_vggface import utils
-from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 import numpy as np
 import cv2
 
@@ -79,7 +76,8 @@ class Preprocessing:
             raise ValueError("No faces detected!")
 
         for (x, y, w, h) in face_coor:
-            # print(x,y,w,h)
+            #print(x, y, w, h)
+            x, y = max(x, 0), max(y, 0)
             fc = self.img_array[y:y + h, x:x + w]
             self.faces.append(Preprocessing(img_array=fc, detector=self.detector,
                                             detected=[update_detection_dic(self.detected[i])]))
@@ -216,7 +214,7 @@ def applyPreprocessing(img_array, detector):
     #img_array = pyplot.imread(img_path)
     #img_array = ((img_array/255)*255).astype(np.uint8)
 
-    pipe = Preprocessing(img_array=img_array, detector=detector,
+    pipe = Preprocessing(img_array=img_array.astype(np.uint8), detector=detector,
                          desiredFaceHeight=224, desiredFaceWidth=224)
 
     pipe.clahe(in_place=True)
@@ -225,5 +223,5 @@ def applyPreprocessing(img_array, detector):
     pipe.face_extract(extra=0)
     sub_pipe = pipe.faces[0]
 
-    sub_pipe.resize(in_place=True)
+    # sub_pipe.resize(in_place=True)
     return sub_pipe.img_array
