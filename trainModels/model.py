@@ -1,14 +1,6 @@
-import itertools
-import multiprocessing.pool
-import threading
-from functools import partial
-
 import keras
-import pandas as pd
-from keras import backend as K
-from keras import layers, models
 from keras.layers import Dense, Dropout, Flatten
-from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D, Convolution2D, Activation
+from keras.layers import MaxPooling2D, ZeroPadding2D, Convolution2D, Activation
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.models import Model
 import numpy as np
@@ -165,16 +157,18 @@ def model_fn(num_classes, arch):
         # Convolution Features
         base_senet = VGGFace(model="senet50", include_top=False, input_shape=(
             224, 224, 3), pooling='max')  # pooling: None, avg or max
+
         last_layer = base_senet.get_layer("avg_pool").output
+
         x = Flatten(name="flatten")(last_layer)
-        x = Dense(4096, activation="relu", name="dense2048")(x)
+        x = Dense(1000, activation="relu", name="dense4096")(x)
         x = Dropout(0.5)(x)
-        x = Dense(4096, activation="relu", name="dense1028")(x)
-        x = Dropout(0.5)(x)
+        #x = Dense(4096, activation="relu", name="dense24096")(x)
+        #x = Dropout(0.5)(x)
         outputs = Dense(num_classes, name="classifer", activation="softmax")(x)
 
         model = Model(base_senet.input, outputs)
-        for layer in model.layers[:-5]:
+        for layer in model.layers[:-12]:
             layer.trainable = False
 
     elif arch == "resnet50":
@@ -220,14 +214,15 @@ def clahe(img_array):
 
 
 def image_preprocessing(img):
-    #pixels = img
+    #pixels = img*255
     pixels = clahe((img*255).astype(np.uint8))
     pixels_expanded = np.expand_dims(pixels.astype(np.float64), axis=0)
-    pre_pro = utils.preprocess_input(pixels_expanded, version=1)  # version 1 for VGG face
+    pre_pro = utils.preprocess_input(pixels_expanded, version=2)  # version 1 for VGG face
     return pre_pro[0]/255
 
 
 def balanced_class_weights(data):
+    """ Returns the weights for the weighted loss function """
     # stores the class of instance at each index key =index, value = class
     dic_temp = dict(enumerate(np.where(data[1] == 1)[1]))
     indices_of_classes = {i: [] for i in range(data[1][0].shape[0])}
