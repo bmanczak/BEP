@@ -5,6 +5,27 @@ from keras_vggface import utils
 import numpy as np
 import cv2
 
+"""
+Example usage:
+
+detector = Mtcnn()
+pipe = Preprocessing(img_array=img_array, detector=detector,
+                     desiredFaceHeight=224, desiredFaceWidth=224)
+
+pipe.clahe(in_place=True)  # illumination normalization
+pipe.run_detector() # applies detector to an image
+pipe.face_extract(extra=0) # extract the faces from an image
+
+for face in pipe.faces:
+    if face.detected[0]['confidence'] >= 0.9: # filters out weak predictions
+        face.face_align(in_place=True) # aligns the face
+        face.resize(in_place=True) # resizes the image
+        face.vgg_prepro(in_place=True) # perform preprocessing for VGG-Face/SENet models
+        output.append(face) #add Preprocessing object to a list
+
+return pipe, output
+"""
+
 
 class Preprocessing:
     """
