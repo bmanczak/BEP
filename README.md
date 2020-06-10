@@ -9,3 +9,5 @@ This repository is devoted to the development of the facial emotion recognition 
 - The model(s) can be successfully quantized with minimal accuracy loss, giving an opportunity of working in resource-constrained environments (2.5-3 FPS on Google Dev Board).
 - Grad-Cam algorithm can be employed to create a coarse localization map highlighting important aspects of the image.
 
+More information about the training and performance can be found on my [Comet.ml] (https://www.comet.ml/blazejmanczak/bachelor-end-project/7b3d3682bc344c6189225e06d0c24659?experiment-tab=params) experiment page.
+
